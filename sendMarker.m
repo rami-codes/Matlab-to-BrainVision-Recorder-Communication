@@ -1,4 +1,4 @@
-function sendMarker(ioObj,address,marker,EPSILON)
+function sendMarker(ioObj,address,marker,equipment, EPSILON)
 %sendMarker Sends markers to BrainVision Recorder
 %   After generating an 'ioObj' and 'address' using the enablePort function
 %   send marker to BrainVision Recorder with value maker
@@ -9,6 +9,7 @@ function sendMarker(ioObj,address,marker,EPSILON)
 %   marker - value of marker (must be an integer)
 %   EPSILON - time duration of marker. Generally set to be a small number
 %   (atleast 1/sampling frequency).
+if strcmp(equipment,'acticap')
     io64(ioObj,address,uint32(marker));   %output command
     pause(EPSILON); %must pause a minimum of 1 time sample
     disp(sprintf('Sent marker %s',char(marker)));
@@ -16,5 +17,12 @@ function sendMarker(ioObj,address,marker,EPSILON)
     disp([num2str(data_in) ' Read from Parallel port']);
     io64(ioObj,address, 0);
     pause(EPSILON);
+elseif strcmp(equipment,'cognionics')
+    fwrite(ioObj, marker, 'uint8');
+    pause(EPSILON);
+    fwrite(ioObj, 0, 'uint8');
+   disp(sprintf('Sent marker %s',char(marker)));
+end
+
 end
 
