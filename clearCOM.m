@@ -1,0 +1,2 @@
+instruments = instrfindall;
+delete(instruments);
